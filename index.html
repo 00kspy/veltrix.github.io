@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@2icyy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #snow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #enter-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            transition: opacity 1s ease;
+        }
+
+        #enter-text {
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            padding: 10px 20px;
+        }
+
+        #enter-text:hover {
+            transform: scale(1.05);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #enter-text::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #fff;
+            transition: width 0.3s ease;
+        }
+
+        #enter-text:hover::after {
+            width: 100%;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 1.5s ease;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .profile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 60px;
+            background-color: #333;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #fff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 48px;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .username {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 15px;
+            min-height: 1.2em;
+        }
+
+        .joined {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #aaa;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+        }
+
+        .groups {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 500px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 30px;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .groups:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        .group:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .group-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background-color: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .group-info {
+            flex: 1;
+        }
+
+        .group-name {
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .group-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .join-btn {
+            padding: 8px 18px;
+            background-color: #0f0;
+            color: #000;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            background-color: #00f;
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        .fade-in {
+            animation: fadeIn 1.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .typing-animation::after {
+            content: '|';
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            font-size: 1em;
+            opacity: 0.8;
+            user-select: none;
+            pointer-events: none;
+            animation-name: snowfall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100px) translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) translateX(100px) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="snow-container"></div>
+
+    <div id="enter-screen">
+        <div id="enter-text">Click to Enter</div>
+    </div>
+
+    <div class="main-content">
+        <div class="profile fade-in" style="animation-delay: 0.3s;">
+            <img class="profile-pic" src="pfp.gif">
+            <div id="username" class="username">@2icyy</div>
+            <div id="tagline" class="tagline typing-animation"></div>
+            <div class="joined">Owner of Veltrix</div>
+            <div class="stats">
+                <div class="stat">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0-0.001-6.001A3 3 0 0 0 8 8z"/>
+                    </svg>
+                    <span>Owner</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="groups fade-in" style="animation-delay: 0.6s;">
+            <div class="group">
+                <div class="group-icon">V</div>
+                <div class="group-info">
+                    <div class="group-name">Veltrix</div>
+                    <div class="group-stats">
+                        <span>0 Online</span>
+                        <span>•</span>
+                        <span>0 Members</span>
+                    </div>
+                </div>
+                <button class="join-btn" onclick="window.location.href='https://discord.gg/mw9jph4E7J';">Join</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="background-music" loop autoplay>
+        <source src="Timeless.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow-container');
+            const snowflakeCount = 100;
+    
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                snowflake.textContent = '❄';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.opacity = Math.random() * 0.8 + 0.2;
+                snowflake.style.fontSize = Math.random() * 15 + 5 + 'px';
+                snowflake.style.animationDuration = Math.random() * 15 + 10 + 's';
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowContainer.appendChild(snowflake);
+            }
+        }
+    
+        function typeText(element, text, speed, delay = 0, callback) {
+            setTimeout(() => {
+                let i = 0;
+                element.textContent = '';
+                element.classList.add('typing-animation');
+    
+                const typeInterval = setInterval(() => {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                    } else {
+                        clearInterval(typeInterval);
+                        setTimeout(() => {
+                            element.classList.remove('typing-animation');
+                            if (callback) {
+                                callback();
+                            }
+                        }, 1000);
+                    }
+                }, speed);
+            }, delay);
+        }
+    
+        function deleteText(element, text, speed, callback) {
+            let i = text.length - 1;
+            const deleteInterval = setInterval(() => {
+                element.textContent = element.textContent.slice(0, i);
+                i--;
+                if (i < 0) {
+                    clearInterval(deleteInterval);
+                    if (callback) {
+                        callback();
+                    }
+                }
+            }, speed);
+        }
+
+        function animateTitle() {
+            const titleText = '@2icyy';
+            let titleIndex = 0;
+            let isDeleting = false;
+
+            function typeAndDelete() {
+                const title = titleText.slice(0, titleIndex);
+                document.title = title;
+                
+                if (!isDeleting) {
+                    titleIndex++;
+                    if (titleIndex === titleText.length) {
+                        isDeleting = true;
+                    }
+                } else {
+                    titleIndex--;
+                    if (titleIndex === 0) {
+                        isDeleting = false;
+                    }
+                }
+
+                setTimeout(typeAndDelete, 555);
+            }
+
+            typeAndDelete(); 
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            createSnowflakes();
+            animateTitle(); 
+
+            const enterText = document.getElementById('enter-text');
+            const enterScreen = document.getElementById('enter-screen');
+            const mainContent = document.querySelector('.main-content');
+            const backgroundMusic = document.getElementById('background-music');
+            const taglineElement = document.getElementById('tagline');
+
+            
+
+            enterText.addEventListener('click', function () {
+                enterScreen.style.opacity = 0;
+                backgroundMusic.volume = 0.7;
+                backgroundMusic.play().catch(e => console.log('Audio autoplay was prevented'));
+
+                setTimeout(() => {
+                    enterScreen.style.display = 'none';
+                    mainContent.style.opacity = 1;
+                }, 1000);
+
+                typeText(taglineElement, 'js chilling', 150,);
+            });
+        });
+    </script>
+</body>
+</html>
